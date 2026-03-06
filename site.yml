@@ -1,10 +1,11 @@
----
 - name: Deploy LAMP stack
-  hosts: all
+  hosts: webservers
   become: true
 
-  collections:
-    - community.mysql
+  vars_files:
+    - ../vars/main.yml
 
   roles:
+    - apache
     - mariadb
+    - wordpress
