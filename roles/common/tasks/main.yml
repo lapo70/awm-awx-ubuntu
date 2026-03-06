@@ -1,0 +1,27 @@
+- name: Remove old MariaDB installation
+  apt:
+    name:
+      - mariadb-server
+      - mariadb-client
+    state: absent
+    purge: yes
+  ignore_errors: yes
+
+- name: Remove old MariaDB files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /var/lib/mysql
+    - /run/mysqld
+    - /etc/mysql
+  ignore_errors: yes
+
+- name: Install required packages
+  apt:
+    name:
+      - python3-pymysql
+      - curl
+      - unzip
+    update_cache: yes
+    state: present

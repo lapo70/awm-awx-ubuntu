@@ -1,0 +1,7 @@
+mariadb_root_password: rootpassword123
+
+db_name: wordpress
+db_user: wpuser
+db_password: wppassword123
+
+wp_path: /var/www/html/wordpress

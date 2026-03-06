@@ -1,0 +1,50 @@
+- name: Install PHP packages
+  apt:
+    name:
+      - php
+      - php-mysql
+      - php-cli
+      - php-curl
+      - php-gd
+      - php-mbstring
+      - php-xml
+      - php-xmlrpc
+      - php-soap
+      - php-intl
+      - php-zip
+      - unzip
+    state: present
+    update_cache: yes
+
+- name: Download WordPress
+  get_url:
+    url: https://wordpress.org/latest.zip
+    dest: /tmp/wordpress.zip
+
+- name: Extract WordPress
+  unarchive:
+    src: /tmp/wordpress.zip
+    dest: /var/www/html/
+    remote_src: yes
+
+- name: Set ownership
+  file:
+    path: /var/www/html/wordpress
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: Create wp-config.php
+  command: cp /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+  args:
+    creates: /var/www/html/wordpress/wp-config.php
+
+- name: Configure WordPress database
+  replace:
+    path: /var/www/html/wordpress/wp-config.php
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+    - { regexp: "database_name_here", replace: "{{ wp_db_name }}" }
+    - { regexp: "username_here", replace: "{{ wp_db_user }}" }
+    - { regexp: "password_here", replace: "{{ wp_db_password }}" }

@@ -1,0 +1,52 @@
+- name: Install MariaDB
+  apt:
+    name: mariadb-server
+    state: present
+    update_cache: yes
+
+- name: Ensure MariaDB directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: '0755'
+  loop:
+    - /var/lib/mysql
+    - /run/mysqld
+
+- name: Start MariaDB
+  service:
+    name: mariadb
+    state: started
+    enabled: yes
+
+- name: Wait for MariaDB socket
+  wait_for:
+    path: /run/mysqld/mysqld.sock
+    timeout: 30
+
+- name: Set MariaDB root password
+  community.mysql.mysql_user:
+    name: root
+    host: localhost
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /run/mysqld/mysqld.sock
+    check_implicit_admin: true
+    priv: "*.*:ALL,GRANT"
+
+- name: Create WordPress database
+  community.mysql.mysql_db:
+    name: "{{ wp_db_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create WordPress DB user
+  community.mysql.mysql_user:
+    name: "{{ wp_db_user }}"
+    password: "{{ wp_db_password }}"
+    priv: "{{ wp_db_name }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
