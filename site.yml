@@ -1,5 +1,5 @@
 - name: Deploy LAMP stack
-  hosts: webservers
+  hosts: all
   become: true
 
   vars_files:
@@ -8,4 +8,5 @@
   roles:
     - apache
     - mariadb
+
     - wordpress
