@@ -1,6 +1,6 @@
 ---
 - name: Deploy LAMP stack
-  hosts: webservers
+  hosts: all
   become: true
 
   roles:
