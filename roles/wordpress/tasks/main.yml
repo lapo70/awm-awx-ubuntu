@@ -1,4 +1,7 @@
 ---
+- name: Load OS variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
 - name: Install PHP packages
   package:
     name: "{{ php_packages }}"
@@ -18,7 +21,6 @@
 - name: Set permissions
   file:
     path: /var/www/html/wordpress
-    state: directory
-    recurse: yes
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
+    recurse: yes

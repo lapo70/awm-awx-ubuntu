@@ -1,12 +1,4 @@
 apache_package: apache2
 apache_service: apache2
-
-php_packages:
-  - php
-  - php-mysql
-  - libapache2-mod-php
-  - wget
-  - tar
-
 web_user: www-data
 web_group: www-data
