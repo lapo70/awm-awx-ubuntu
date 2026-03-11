@@ -1,33 +1,36 @@
 ---
-- name: Load OS variables
+- name: Load OS-specific variables
   include_vars: "{{ ansible_os_family }}.yml"
 
 - name: Install MariaDB packages
   package:
     name: "{{ mariadb_packages }}"
     state: present
+  become: true
 
 - name: Ensure MariaDB service is started
   service:
     name: mariadb
     state: started
     enabled: yes
+  become: true
 
 # ----------------------------------------------------
-# Ensure root uses password authentication
+# Fix root authentication for fresh install (RedHat)
 # ----------------------------------------------------
-- name: Set root plugin to mysql_native_password
+- name: Ensure root uses mysql_native_password on RedHat
   community.mysql.mysql_user:
     name: root
     host: localhost
     password: "{{ mariadb_root_password }}"
     plugin: mysql_native_password
     state: present
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
+  login_unix_socket: /var/lib/mysql/mysql.sock
+  when: ansible_os_family == "RedHat"
+  become: true
 
 # ----------------------------------------------------
-# Create WordPress database
+# Create WordPress database (all OS)
 # ----------------------------------------------------
 - name: Create WordPress database
   community.mysql.mysql_db:
@@ -35,11 +38,10 @@
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
+  become: true
 
 # ----------------------------------------------------
-# Create WordPress user
+# Create WordPress user (all OS)
 # ----------------------------------------------------
 - name: Create WordPress user
   community.mysql.mysql_user:
@@ -50,5 +52,4 @@
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
+  become: true
