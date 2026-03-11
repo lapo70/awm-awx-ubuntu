@@ -1,9 +1,10 @@
 ---
+- name: Load OS variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
 - name: Install MariaDB
   package:
-    name:
-      - mariadb-server
-      - python3-pymysql
+    name: "{{ mariadb_packages }}"
     state: present
 
 - name: Start MariaDB
