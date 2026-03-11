@@ -1,4 +1,0 @@
-mysql_root_password: "RootPassword123!"
-wp_db_name: "wordpress"
-wp_db_user: "wpuser"
-wp_db_password: "WordpressPass123!"

@@ -1,0 +1,11 @@
+apache_package: httpd
+apache_service: httpd
+
+php_packages:
+  - php
+  - php-mysqlnd
+  - wget
+  - tar
+
+web_user: apache
+web_group: apache
