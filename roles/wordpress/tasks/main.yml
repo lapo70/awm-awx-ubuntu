@@ -24,3 +24,11 @@
     owner: "{{ web_user }}"
     group: "{{ web_group }}"
     recurse: yes
+    
+- name: Create wp-config.php
+  template:
+    src: wp-config.php.j2
+    dest: /var/www/html/wordpress/wp-config.php
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: '0644'
